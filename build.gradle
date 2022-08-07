@@ -14,7 +14,7 @@ group 'bisq'
 version = file("bisq/desktop/src/main/resources/version.txt").text.trim()
 
 application {
-    project.mainClassName = 'bisq.daoNode.DaoNodeRestApiApplication'
+    project.mainClassName = 'bisq.daonode.DaoNodeRestApiApplication'
 }
 
 java {
