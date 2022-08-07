@@ -4,6 +4,8 @@
 # Convention: mark all versions using 'strictly'. This ensures only one version is allowed in the dependency tree, even
 # when multiple versions are attempted to be brought in as transitive dependencies of other requirements.
 [versions]
+chimp-jsocks-lib = { strictly = '567e1cd6' }
+fxmisc-easybind-lib = { strictly = '1.0.3' }
 glassfish-jaxb-lib = { strictly = '3.0.2' }
 guava-lib = { strictly = '30.1.1-jre' }
 guice-lib = { strictly = '5.0.1' }
@@ -11,6 +13,7 @@ jersey-lib = { strictly = '3.0.4' }
 junit-jupiter-lib = { strictly = '5.8.2' }
 logback-lib = { strictly = '1.2.6' }
 lombok-lib = { strictly = '1.18.22' }
+openjfx-plugin = { strictly = '0.0.12' }
 slf4j-lib = { strictly = '1.7.36' }
 shadow-plugin = { strictly = '5.2.0' }
 swagger-lib = { strictly = '2.2.0' }
@@ -19,6 +22,8 @@ swagger-lib = { strictly = '2.2.0' }
 # Note: keys can contain dash (protobuf-java) but the dash is replaced by dot when referenced
 # in a build.gradle ('implementation libs.protobuf.java')
 [libraries]
+chimp-jsocks = { module = 'com.github.chimp1984:jsocks', version.ref = 'chimp-jsocks-lib'  }
+fxmisc-easybind = { module = 'org.fxmisc.easybind:easybind', version.ref = 'fxmisc-easybind-lib' }
 guava = { module = 'com.google.guava:guava', version.ref = 'guava-lib' }
 guice = { module = 'com.google.inject:guice', version.ref = 'guice-lib' }
 jersey-container-jdk-http = { module = 'org.glassfish.jersey.containers:jersey-container-jdk-http', version.ref = 'jersey-lib' }
@@ -36,4 +41,5 @@ swagger = { module = 'io.swagger.core.v3:swagger-jaxrs2-jakarta', version.ref = 
 jersey-libs = ['jersey-container-jdk-http', 'jersey-media-json-jackson', 'jersey-inject-jersey-hk2']
 
 [plugins]
+openjfx = { id = 'org.openjfx.javafxplugin', version.ref = 'openjfx-plugin' }
 shadow = { id = 'com.github.johnrengelman.shadow', version.ref = 'shadow-plugin' }
