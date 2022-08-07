@@ -1,0 +1,72 @@
+plugins {
+    id 'application'
+    id 'bisq.post-build'
+    alias(libs.plugins.shadow)
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+group 'bisq'
+version = file("bisq/desktop/src/main/resources/version.txt").text.trim()
+
+application {
+    project.mainClassName = 'bisq.daoNode.DaoNodeRestApiApplication'
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
+
+jar.manifest.attributes(
+        "Implementation-Title": project.name,
+        "Implementation-Version": version
+)
+
+configurations.all {
+    exclude group: 'com.github.bisq-network:bitcoinj'
+    exclude group: 'com.github.bisq-network.netlayer'
+    exclude group: 'com.github.bisq-network.tor-binary'
+    exclude group: 'io.grpc'
+    exclude group: 'org.fxmisc.easybind'
+}
+
+dependencies {
+    implementation 'bisq:assets'
+    implementation 'bisq:common'
+    implementation 'bisq:core'
+    implementation 'bisq:p2p'
+
+    implementation libs.glassfish.jaxb
+    implementation libs.guava
+    implementation libs.guice
+
+    implementation libs.bundles.jersey.libs
+    implementation libs.swagger
+
+    implementation libs.logback.core
+    implementation libs.logback.classic
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+    implementation libs.slf4j.api
+
+    testAnnotationProcessor libs.lombok
+    testCompileOnly libs.lombok
+    testImplementation libs.junit.jupiter
+}
+
+clean.doFirst {
+    // Remove the project root level 'bisq-*' scripts and 'lib' dir generated at the end of the assemble task.
+    delete fileTree(dir: projectDir, include: ['bisq-daonode', 'bisq-daonode.bat']), 'lib'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}

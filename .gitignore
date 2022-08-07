@@ -1,0 +1,6 @@
+.gradle
+.idea
+build
+bisq-daonode
+bisq-daonode.bat
+lib
