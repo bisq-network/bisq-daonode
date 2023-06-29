@@ -18,16 +18,6 @@
 package bisq.daonode;
 
 import bisq.common.config.Config;
-
-import java.net.URI;
-
-import java.util.function.Consumer;
-
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-
-
-
 import bisq.daonode.endpoints.AccountAgeApi;
 import bisq.daonode.endpoints.BondedReputationApi;
 import bisq.daonode.endpoints.ProofOfBurnApi;
@@ -36,8 +26,13 @@ import bisq.daonode.error.CustomExceptionMapper;
 import bisq.daonode.error.StatusException;
 import bisq.daonode.util.StaticFileHandler;
 import com.sun.net.httpserver.HttpServer;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+
+import java.net.URI;
+import java.util.function.Consumer;
 
 /**
  * Application to start and config the rest service.
@@ -93,13 +88,16 @@ public class DaoNodeRestApiApplication extends ResourceConfig {
 
     private void startServer(String url, int port) {
         baseUrl = url + ":" + port + "/api/v1";
-        httpServer = JdkHttpServerFactory.createHttpServer(URI.create(baseUrl), this);
-        httpServer.createContext("/doc", new StaticFileHandler("/doc/v1/"));
+        try {
+            httpServer = JdkHttpServerFactory.createHttpServer(URI.create(baseUrl), this);
+            httpServer.createContext("/doc", new StaticFileHandler("/doc/v1/"));
 
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutDown));
+            Runtime.getRuntime().addShutdownHook(new Thread(this::shutDown));
 
-        log.info("Server started at {}.", baseUrl);
-
+            log.info("Server started at {}.", baseUrl);
+        } catch (Exception e1) {
+            log.error("Exception at startServer:", e1);
+        }
         // block and wait shut down signal, like CTRL+C
         try {
             Thread.currentThread().setName("serverThread");
