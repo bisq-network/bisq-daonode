@@ -18,10 +18,7 @@
 package bisq.daonode;
 
 import bisq.common.config.Config;
-import bisq.daonode.endpoints.AccountAgeApi;
-import bisq.daonode.endpoints.BondedReputationApi;
-import bisq.daonode.endpoints.ProofOfBurnApi;
-import bisq.daonode.endpoints.SignedWitnessApi;
+import bisq.daonode.endpoints.*;
 import bisq.daonode.error.CustomExceptionMapper;
 import bisq.daonode.error.StatusException;
 import bisq.daonode.util.StaticFileHandler;
@@ -53,6 +50,7 @@ public class DaoNodeRestApiApplication extends ResourceConfig {
                     .register(StatusException.StatusExceptionMapper.class)
                     .register(ProofOfBurnApi.class)
                     .register(BondedReputationApi.class)
+                    .register(BondedRoleVerificationApi.class)
                     .register(AccountAgeApi.class)
                     .register(SignedWitnessApi.class)
                     .register(SwaggerResolution.class);
