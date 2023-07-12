@@ -34,28 +34,30 @@ configurations.all {
 }
 
 dependencies {
+    implementation enforcedPlatform(project(':platform'))
+
     implementation 'bisq:assets'
     implementation 'bisq:common'
     implementation 'bisq:core'
     implementation 'bisq:p2p'
 
     implementation libs.chimp.jsocks
-    implementation libs.fxmisc.easybind
+    implementation bisqLibs.fxmisc.easybind
     implementation libs.glassfish.jaxb
-    implementation libs.guava
-    implementation libs.guice
+    implementation bisqLibs.google.guava
+    implementation bisqLibs.google.guice
 
     implementation libs.bundles.jersey.libs
     implementation libs.swagger
 
-    implementation libs.logback.core
-    implementation libs.logback.classic
-    compileOnly libs.lombok
-    annotationProcessor libs.lombok
-    implementation libs.slf4j.api
+    implementation bisqLibs.logback.core
+    implementation bisqLibs.logback.classic
+    compileOnly bisqLibs.lombok
+    annotationProcessor bisqLibs.lombok
+    implementation bisqLibs.slf4j.api
 
-    testAnnotationProcessor libs.lombok
-    testCompileOnly libs.lombok
+    testAnnotationProcessor bisqLibs.lombok
+    testCompileOnly bisqLibs.lombok
     testImplementation libs.junit.jupiter
 }
 
