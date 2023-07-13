@@ -6,8 +6,9 @@ dependencies {
     constraints {
         api 'org.apache.commons:commons-lang3:3.11'
 
-        api 'com.fasterxml.jackson.core:jackson-annotations:2.12.1'
-        api 'com.fasterxml.jackson.core:jackson-core:2.12.1'
-        api 'com.fasterxml.jackson.core:jackson-databind:2.12.1'
+        api 'com.fasterxml.jackson.core:jackson-annotations:2.13.1'
+        api 'com.fasterxml.jackson.core:jackson-core:2.13.1'
+        api 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+        api 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.12.7'
     }
 }

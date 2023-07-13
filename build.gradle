@@ -38,7 +38,11 @@ dependencies {
 
     implementation 'bisq:assets'
     implementation 'bisq:common'
-    implementation 'bisq:core'
+    implementation('bisq:core') {
+        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-annotations'
+        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
+        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+    }
     implementation 'bisq:p2p'
 
     implementation libs.chimp.jsocks
