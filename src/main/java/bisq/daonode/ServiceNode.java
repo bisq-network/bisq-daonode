@@ -18,23 +18,6 @@
 package bisq.daonode;
 
 
-import bisq.core.account.witness.AccountAgeWitnessService;
-import bisq.core.app.TorSetup;
-import bisq.core.app.misc.AppSetupWithP2PAndDAO;
-import bisq.core.app.misc.ExecutableForAppWithP2p;
-import bisq.core.app.misc.ModuleForAppWithP2p;
-import bisq.core.dao.governance.bond.reputation.BondedReputationRepository;
-import bisq.core.dao.state.DaoStateService;
-import bisq.core.dao.state.DaoStateSnapshotService;
-import bisq.core.user.Cookie;
-import bisq.core.user.CookieKey;
-import bisq.core.user.Preferences;
-import bisq.core.user.User;
-
-import bisq.network.p2p.P2PService;
-import bisq.network.p2p.P2PServiceListener;
-import bisq.network.p2p.peers.PeerManager;
-
 import bisq.common.Timer;
 import bisq.common.UserThread;
 import bisq.common.app.AppModule;
@@ -42,10 +25,25 @@ import bisq.common.app.Version;
 import bisq.common.config.BaseCurrencyNetwork;
 import bisq.common.config.Config;
 import bisq.common.handlers.ResultHandler;
-
+import bisq.core.account.witness.AccountAgeWitnessService;
+import bisq.core.app.TorSetup;
+import bisq.core.app.misc.AppSetupWithP2PAndDAO;
+import bisq.core.app.misc.ExecutableForAppWithP2p;
+import bisq.core.app.misc.ModuleForAppWithP2p;
+import bisq.core.dao.SignVerifyService;
+import bisq.core.dao.governance.bond.reputation.BondedReputationRepository;
+import bisq.core.dao.governance.bond.role.BondedRolesRepository;
+import bisq.core.dao.state.DaoStateService;
+import bisq.core.dao.state.DaoStateSnapshotService;
+import bisq.core.user.Cookie;
+import bisq.core.user.CookieKey;
+import bisq.core.user.Preferences;
+import bisq.core.user.User;
+import bisq.network.p2p.P2PService;
+import bisq.network.p2p.P2PServiceListener;
+import bisq.network.p2p.peers.PeerManager;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 //todo not sure if the restart handling from seed nodes is required
@@ -61,6 +59,10 @@ public class ServiceNode extends ExecutableForAppWithP2p {
     private BondedReputationRepository bondedReputationRepository;
     @Getter
     private AccountAgeWitnessService accountAgeWitnessService;
+    @Getter
+    private BondedRolesRepository bondedRolesRepository;
+    @Getter
+    private SignVerifyService signVerifyService;
 
     public ServiceNode() {
         super("Bisq Dao Node", "bisq-dao-node", "bisq_dao_node", Version.VERSION);
@@ -125,7 +127,9 @@ public class ServiceNode extends ExecutableForAppWithP2p {
         daoStateService = injector.getInstance(DaoStateService.class);
         accountAgeWitnessService = injector.getInstance(AccountAgeWitnessService.class);
         bondedReputationRepository = injector.getInstance(BondedReputationRepository.class);
-
+        bondedRolesRepository = injector.getInstance(BondedRolesRepository.class);
+        signVerifyService = injector.getInstance(SignVerifyService.class);
+        
         injector.getInstance(P2PService.class).addP2PServiceListener(new P2PServiceListener() {
             @Override
             public void onDataReceived() {
