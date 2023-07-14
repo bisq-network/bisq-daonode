@@ -39,6 +39,7 @@ public class BondedRoleVerificationDto {
     }
 
     public BondedRoleVerificationDto(String errorMessage) {
+        log.info("Verifying bonded role failed. {}", errorMessage);
         this.errorMessage = errorMessage;
     }
 }

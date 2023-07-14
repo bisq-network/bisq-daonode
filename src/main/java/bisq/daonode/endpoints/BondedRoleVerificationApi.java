@@ -69,21 +69,24 @@ public class BondedRoleVerificationApi {
                     schema = @Schema(allOf = BondedRoleVerificationDto.class))}
     )
     @GET
-    @Path("get-bonded-role-verification/{user-name}/{role-type}/{message}/{signature-hex}")
-    public BondedRoleVerificationDto getBondedRoleVerification(@PathParam("user-name") String userName,
+    @Path("get-bonded-role-verification/{bond-user-name}/{role-type}/{profile-id}/{signature}")
+    public BondedRoleVerificationDto getBondedRoleVerification(@PathParam("bond-user-name") String bondUserName,
                                                                @PathParam("role-type") String roleType,
-                                                               @PathParam("message") String nickName,
-                                                               @PathParam("signature-hex") String signature) {
+                                                               @PathParam("profile-id") String profileId,
+                                                               @PathParam("signature") String signature) {
+        log.info("Received request for verifying a bonded role. bondUserName={}, roleType={}, profileId={}, signature={}",
+                bondUserName, roleType, profileId, signature);
         String signatureBase64 = Base64.encode(Hex.decode(signature));
         return bondedRolesRepository.getAcceptedBonds().stream()
                 .filter(bondedRole -> bondedRole.getBondedAsset().getBondedRoleType().name().equals(roleType))
-                .filter(bondedRole -> bondedRole.getBondedAsset().getName().equals(userName))
+                .filter(bondedRole -> bondedRole.getBondedAsset().getName().equals(bondUserName))
                 .filter(bondedRole -> bondedRole.getBondState() == BondState.LOCKUP_TX_CONFIRMED)
                 .flatMap(bondedRole -> daoStateService.getTx(bondedRole.getLockupTxId()).stream())
                 .map(tx -> tx.getTxInputs().get(0))
                 .map(txInput -> {
                     try {
-                        signVerifyService.verify(nickName, txInput.getPubKey(), signatureBase64);
+                        signVerifyService.verify(profileId, txInput.getPubKey(), signatureBase64);
+                        log.info("Successfully verified bonded role");
                         return new BondedRoleVerificationDto();
                     } catch (SignatureException e) {
                         return new BondedRoleVerificationDto("Signature verification failed.");
