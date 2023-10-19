@@ -4,6 +4,16 @@ pluginManagement {
     }
     includeBuild('bisq-gradle')
 }
-rootProject.name = 'bisq-daonode'
-includeBuild('bisq')
 
+rootProject.name = 'bisq-daonode'
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        bisqLibs {
+            from(files('bisq/gradle/libs.versions.toml'))
+        }
+    }
+}
+
+includeBuild('bisq')
+include 'platform'
