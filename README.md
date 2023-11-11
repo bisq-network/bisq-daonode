@@ -29,6 +29,7 @@ $ ./gradlew clean build
 
 To update submodule:
 ```
+$ git pull --recurse-submodules
 $ git submodule update --remote
 ```
 
