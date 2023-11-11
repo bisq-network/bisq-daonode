@@ -14,7 +14,7 @@ group 'bisq'
 version = file("bisq/desktop/src/main/resources/version.txt").text.trim()
 
 application {
-    project.mainClassName = 'bisq.daonode.DaoNodeRestApiApplication'
+    project.mainClassName = 'bisq.daonode.DaoNodeApplication'
 }
 
 java {
@@ -77,8 +77,3 @@ test {
     }
 }
 
-distZip.enabled = true
-distTar.enabled = false
-shadowDistZip.enabled = true
-shadowDistTar.enabled = false
-shadowJar.enabled = true
