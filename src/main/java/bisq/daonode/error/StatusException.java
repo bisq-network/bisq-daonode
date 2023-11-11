@@ -17,15 +17,12 @@
 
 package bisq.daonode.error;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-
-
-
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Provider
@@ -46,7 +43,7 @@ public class StatusException extends RuntimeException {
     public static class StatusExceptionMapper implements ExceptionMapper<StatusException> {
         @Override
         public Response toResponse(StatusException exception) {
-            log.error("", exception);
+            log.error("Exception: ", exception);
             return Response.status(exception.getHttpStatus())
                     .entity(new ErrorMessage(exception.getMessage()))
                     .build();

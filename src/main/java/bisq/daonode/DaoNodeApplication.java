@@ -38,14 +38,14 @@ import java.util.function.Consumer;
  * Swagger doc are available at <a href="http://localhost:8082/doc/v1/index.html">REST API documentation</a>
  */
 @Slf4j
-public class DaoNodeRestApiApplication extends ResourceConfig {
+public class DaoNodeApplication extends ResourceConfig {
     @Getter
     private static String baseUrl;
 
     public static void main(String[] args) throws Exception {
-        DaoNodeRestApiApplication daoNodeRestApiApplication = new DaoNodeRestApiApplication();
-        daoNodeRestApiApplication.startDaoNode(args, config -> {
-            daoNodeRestApiApplication
+        DaoNodeApplication daoNodeApplication = new DaoNodeApplication();
+        daoNodeApplication.start(args, config -> {
+            daoNodeApplication
                     .register(CustomExceptionMapper.class)
                     .register(StatusException.StatusExceptionMapper.class)
                     .register(ProofOfBurnApi.class)
@@ -54,31 +54,29 @@ public class DaoNodeRestApiApplication extends ResourceConfig {
                     .register(AccountAgeApi.class)
                     .register(SignedWitnessApi.class)
                     .register(SwaggerResolution.class);
-            daoNodeRestApiApplication.startServer(config.daoNodeApiUrl, config.daoNodeApiPort);
+            daoNodeApplication.startServer(config.daoNodeApiUrl, config.daoNodeApiPort);
         });
     }
 
 
     @Getter
-    private final ServiceNode serviceNode;
-
+    private final BisqDataNode bisqDataNode;
     private HttpServer httpServer;
 
-    public DaoNodeRestApiApplication() {
-        serviceNode = new ServiceNode();
+    public DaoNodeApplication() {
+        bisqDataNode = new BisqDataNode();
     }
 
-    private void startDaoNode(String[] args, Consumer<Config> configConsumer) {
+    private void start(String[] args, Consumer<Config> configConsumer) {
         new Thread(() -> {
-            serviceNode.execute(args);
-            configConsumer.accept(serviceNode.getConfig());
+            bisqDataNode.execute(args);
+            configConsumer.accept(bisqDataNode.getConfig());
             try {
                 // Keep running
                 Thread.currentThread().setName("daoNodeThread");
                 Thread.currentThread().join();
             } catch (InterruptedException e) {
                 log.error("daoNodeThread interrupted", e);
-                e.printStackTrace();
                 shutDown();
             }
         }).start();
@@ -109,11 +107,8 @@ public class DaoNodeRestApiApplication extends ResourceConfig {
     }
 
     private void shutDown() {
-        if (serviceNode != null) {
-            serviceNode.gracefulShutDown(this::stopServer);
-        } else {
-            stopServer();
-        }
+        stopServer();
+        bisqDataNode.gracefulShutDown();
     }
 
     private void stopServer() {

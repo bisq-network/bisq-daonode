@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 //todo not sure if the restart handling from seed nodes is required
 
 @Slf4j
-public class ServiceNode extends ExecutableForAppWithP2p {
+public class BisqDataNode extends ExecutableForAppWithP2p {
     private static final long CHECK_CONNECTION_LOSS_SEC = 30;
 
     private Timer checkConnectionLossTime;
@@ -64,8 +64,8 @@ public class ServiceNode extends ExecutableForAppWithP2p {
     @Getter
     private SignVerifyService signVerifyService;
 
-    public ServiceNode() {
-        super("Bisq Dao Node", "bisq-dao-node", "bisq_dao_node", Version.VERSION);
+    public BisqDataNode() {
+        super("Bisq Data Node", "bisq-data-node", "bisq_data_node", Version.VERSION);
     }
 
     public Config getConfig() {
@@ -161,7 +161,7 @@ public class ServiceNode extends ExecutableForAppWithP2p {
                 boolean preventPeriodicShutdownAtSeedNode = injector.getInstance(Key.get(boolean.class,
                         Names.named(Config.PREVENT_PERIODIC_SHUTDOWN_AT_SEED_NODE)));
                 if (!preventPeriodicShutdownAtSeedNode) {
-                    startShutDownInterval(ServiceNode.this);
+                    startShutDownInterval(BisqDataNode.this);
                 }
                 UserThread.runAfter(() -> setupConnectionLossCheck(), 60);
 
@@ -202,7 +202,7 @@ public class ServiceNode extends ExecutableForAppWithP2p {
 
     }
 
-    private void gracefulShutDown() {
+    public void gracefulShutDown() {
         gracefulShutDown(() -> {
         });
     }
