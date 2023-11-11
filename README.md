@@ -50,3 +50,7 @@ Program arguments to run 'DaoNodeApplication' with Bitcoin Regtest and localhost
 ```
 
 To run the 'DaoNodeApplication' you need to have Bitcoin node running and have 'blocknotify' in the `bitcoin.conf` set up.
+
+REST API documentation:
+Run the 'DaoNodeApplication' and go to:
+http://localhost:8082/doc/v1/index.html
