@@ -77,8 +77,8 @@ test {
     }
 }
 
-distZip.enabled = false
+distZip.enabled = true
 distTar.enabled = false
-shadowDistZip.enabled = false
+shadowDistZip.enabled = true
 shadowDistTar.enabled = false
-shadowJar.enabled = false
+shadowJar.enabled = true
