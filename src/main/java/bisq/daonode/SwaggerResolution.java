@@ -17,10 +17,6 @@
 
 package bisq.daonode;
 
-import lombok.extern.slf4j.Slf4j;
-
-
-
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.jaxrs2.Reader;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -35,6 +31,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Path("openapi.json")
@@ -55,7 +52,7 @@ public class SwaggerResolution {
                                 .name("GNU Affero General Public License")
                                 .url("https://github.com/bisq-network/bisq2/blob/main/LICENSE"));
 
-                api.info(info).addServersItem(new Server().url(DaoNodeRestApiApplication.getBaseUrl()));
+                api.info(info).addServersItem(new Server().url(DaoNodeApplication.getBaseUrl()));
                 SwaggerConfiguration configuration = new SwaggerConfiguration().openAPI(api);
                 Reader reader = new Reader(configuration);
                 OpenAPI openAPI = reader.read(application.getClasses());

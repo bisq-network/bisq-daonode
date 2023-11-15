@@ -17,23 +17,12 @@
 
 package bisq.daonode.endpoints;
 
+import bisq.common.util.Hex;
 import bisq.core.dao.governance.bond.reputation.BondedReputationRepository;
 import bisq.core.dao.state.DaoStateService;
 import bisq.core.dao.state.model.blockchain.Tx;
-
-import bisq.common.util.Hex;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import lombok.extern.slf4j.Slf4j;
-
-
-
-import bisq.daonode.DaoNodeRestApiApplication;
-import bisq.daonode.ServiceNode;
+import bisq.daonode.BisqDataNode;
+import bisq.daonode.DaoNodeApplication;
 import bisq.daonode.dto.BondedReputationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -48,6 +37,12 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Endpoint for getting the bonded reputation data from a given block height.
@@ -64,9 +59,9 @@ public class BondedReputationApi {
     private final DaoStateService daoStateService;
 
     public BondedReputationApi(@Context Application application) {
-        ServiceNode serviceNode = ((DaoNodeRestApiApplication) application).getServiceNode();
-        daoStateService = serviceNode.getDaoStateService();
-        bondedReputationRepository = serviceNode.getBondedReputationRepository();
+        BisqDataNode bisqDataNode = ((DaoNodeApplication) application).getBisqDataNode();
+        daoStateService = bisqDataNode.getDaoStateService();
+        bondedReputationRepository = bisqDataNode.getBondedReputationRepository();
     }
 
     @Operation(description = "Request the bonded reputation data")
@@ -97,7 +92,8 @@ public class BondedReputationApi {
                     } else {
                         return null;
                     }
-                }).filter(Objects::nonNull)
+                })
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 }

@@ -18,15 +18,8 @@
 package bisq.daonode.endpoints;
 
 import bisq.core.account.witness.AccountAgeWitnessService;
-
-import lombok.extern.slf4j.Slf4j;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
-
-
-import bisq.daonode.DaoNodeRestApiApplication;
-import bisq.daonode.ServiceNode;
+import bisq.daonode.BisqDataNode;
+import bisq.daonode.DaoNodeApplication;
 import bisq.daonode.dto.ProofOfBurnDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,6 +34,9 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Endpoint for getting the signed witness date from a given hash as hex string.
@@ -53,10 +49,10 @@ import jakarta.ws.rs.core.MediaType;
 @Tag(name = "Signed witness API")
 public class SignedWitnessApi {
     private static final String DESC_HASH = "The hash of the signed account age witness as hex string";
-    private final ServiceNode serviceNode;
+    private final BisqDataNode bisqDataNode;
 
     public SignedWitnessApi(@Context Application application) {
-        serviceNode = ((DaoNodeRestApiApplication) application).getServiceNode();
+        bisqDataNode = ((DaoNodeApplication) application).getBisqDataNode();
     }
 
     @Operation(description = "Request the signed witness date")
@@ -69,7 +65,7 @@ public class SignedWitnessApi {
     public Long getDate(@Parameter(description = DESC_HASH)
                         @PathParam("hash")
                         String hash) {
-        AccountAgeWitnessService accountAgeWitnessService = checkNotNull(serviceNode.getAccountAgeWitnessService());
+        AccountAgeWitnessService accountAgeWitnessService = checkNotNull(bisqDataNode.getAccountAgeWitnessService());
         return accountAgeWitnessService.getWitnessByHashAsHex(hash)
                 .map(accountAgeWitnessService::getWitnessSignDate)
                 .orElse(-1L);

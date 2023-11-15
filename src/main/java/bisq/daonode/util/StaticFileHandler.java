@@ -17,29 +17,24 @@
 
 package bisq.daonode.util;
 
-import java.net.URI;
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
+import java.net.URI;
 import java.util.Arrays;
-
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-
-
-
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 
 /**
  * JDK Server needs handler for serving files, will change in JDK 18
  * Currently this is only to serve the swagger-ui content to the client.
  * So any call to this handler must begin with api/v1. We keep v1 in case
  * we will have incompatible changes in the future.
- * This handler is limited to html,css,json and javascript files.
+ * This handler is limited to html, css, json and javascript files.
  */
 @Slf4j
 public class StaticFileHandler implements HttpHandler {

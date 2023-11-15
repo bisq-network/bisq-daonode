@@ -17,21 +17,10 @@
 
 package bisq.daonode.endpoints;
 
-import bisq.core.dao.governance.proofofburn.ProofOfBurnService;
-
 import bisq.common.util.Hex;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import lombok.extern.slf4j.Slf4j;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
-
-
-import bisq.daonode.DaoNodeRestApiApplication;
-import bisq.daonode.ServiceNode;
+import bisq.core.dao.governance.proofofburn.ProofOfBurnService;
+import bisq.daonode.BisqDataNode;
+import bisq.daonode.DaoNodeApplication;
 import bisq.daonode.dto.ProofOfBurnDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -46,6 +35,12 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Endpoint for getting the proof of burn data from a given block height.
@@ -58,10 +53,10 @@ import jakarta.ws.rs.core.MediaType;
 @Tag(name = "Proof of burn API")
 public class ProofOfBurnApi {
     private static final String DESC_BLOCK_HEIGHT = "The block height from which we request the proof of burn data";
-    private final ServiceNode serviceNode;
+    private final BisqDataNode bisqDataNode;
 
     public ProofOfBurnApi(@Context Application application) {
-        serviceNode = ((DaoNodeRestApiApplication) application).getServiceNode();
+        bisqDataNode = ((DaoNodeApplication) application).getBisqDataNode();
     }
 
     @Operation(description = "Request the proof of burn data")
@@ -74,7 +69,7 @@ public class ProofOfBurnApi {
     public List<ProofOfBurnDto> getProofOfBurn(@Parameter(description = DESC_BLOCK_HEIGHT)
                                                @PathParam("block-height")
                                                int fromBlockHeight) {
-        return checkNotNull(serviceNode.getDaoStateService()).getProofOfBurnTxs().stream()
+        return checkNotNull(bisqDataNode.getDaoStateService()).getProofOfBurnTxs().stream()
                 .filter(tx -> tx.getBlockHeight() >= fromBlockHeight)
                 .map(tx -> new ProofOfBurnDto(tx.getBurntBsq(),
                         tx.getTime(),

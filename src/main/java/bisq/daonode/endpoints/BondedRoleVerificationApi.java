@@ -23,8 +23,8 @@ import bisq.core.dao.SignVerifyService;
 import bisq.core.dao.governance.bond.BondState;
 import bisq.core.dao.governance.bond.role.BondedRolesRepository;
 import bisq.core.dao.state.DaoStateService;
-import bisq.daonode.DaoNodeRestApiApplication;
-import bisq.daonode.ServiceNode;
+import bisq.daonode.BisqDataNode;
+import bisq.daonode.DaoNodeApplication;
 import bisq.daonode.dto.BondedRoleVerificationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -57,10 +57,10 @@ public class BondedRoleVerificationApi {
     private final SignVerifyService signVerifyService;
 
     public BondedRoleVerificationApi(@Context Application application) {
-        ServiceNode serviceNode = ((DaoNodeRestApiApplication) application).getServiceNode();
-        daoStateService = serviceNode.getDaoStateService();
-        bondedRolesRepository = serviceNode.getBondedRolesRepository();
-        signVerifyService = serviceNode.getSignVerifyService();
+        BisqDataNode bisqDataNode = ((DaoNodeApplication) application).getBisqDataNode();
+        daoStateService = bisqDataNode.getDaoStateService();
+        bondedRolesRepository = bisqDataNode.getBondedRolesRepository();
+        signVerifyService = bisqDataNode.getSignVerifyService();
     }
 
     @Operation(description = "Request the verification of a bonded role with the provided parameters")
@@ -91,7 +91,8 @@ public class BondedRoleVerificationApi {
                     } catch (SignatureException e) {
                         return new BondedRoleVerificationDto("Signature verification failed.");
                     }
-                }).findAny()
+                })
+                .findAny()
                 .orElse(new BondedRoleVerificationDto("Did not find a bonded role matching the parameters"));
     }
 }
