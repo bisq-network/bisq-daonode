@@ -19,7 +19,6 @@ package bisq.daonode.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
 
@@ -28,7 +27,6 @@ import javax.annotation.Nullable;
  * Need to be in sync with the Bisq 2 BondedRoleDto class.
  */
 @Getter
-@Slf4j
 @Schema(title = "BondedRoleVerification")
 public class BondedRoleVerificationDto {
     @Nullable
@@ -39,7 +37,6 @@ public class BondedRoleVerificationDto {
     }
 
     public BondedRoleVerificationDto(String errorMessage) {
-        log.info("Verifying bonded role failed. {}", errorMessage);
         this.errorMessage = errorMessage;
     }
 }

@@ -93,6 +93,10 @@ public class BondedRoleVerificationApi {
                     }
                 })
                 .findAny()
-                .orElse(new BondedRoleVerificationDto("Did not find a bonded role matching the parameters"));
+                .orElseGet(() -> {
+                    String errorMessage = "Did not find a bonded role matching the parameters";
+                    log.warn(errorMessage);
+                    return new BondedRoleVerificationDto(errorMessage);
+                });
     }
 }
